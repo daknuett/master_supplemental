@@ -5,10 +5,15 @@ import numpy as np
 from multiprocessing import cpu_count
 from threading import Thread
 
-bin_path = Path("MC/builddir/")
-out_path = Path("/glurch/scratch/knd35666/HO_configs_autocorrelation_stuff/")
-n_tau = 40
-n_markov = 750000
+bin_path = Path("../../MC/builddir/")
+
+from paths import out_path_unmod as out_path, meta_unmod
+
+n_tau = meta_unmod["n_tau"]
+n_markov = meta_unmod["n_markov"]
+omega = meta_unmod["omega"]
+beta = meta_unmod["beta"]
+Delta = meta_unmod["Delta"]
 
 def produce_qho_data(omega: float, n_tau: int, beta: float, Delta: float, n_markov: int, seed, fname):
     if(not isinstance(n_tau, int) or n_tau <= 0):
@@ -19,9 +24,6 @@ def produce_qho_data(omega: float, n_tau: int, beta: float, Delta: float, n_mark
     
     process = subprocess.run(cmd)
 
-omega = 0.5
-beta = 10
-Delta = 1
 
 seed = lambda i: str(i*2)
 

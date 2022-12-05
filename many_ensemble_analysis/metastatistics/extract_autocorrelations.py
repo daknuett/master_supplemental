@@ -10,7 +10,7 @@ sys.path.append("../../statistics")
 
 from statistic.statistic import make_bins, jackknife_std, tauint
 
-out_path = Path("/glurch/scratch/knd35666/HO_configs_autocorrelation_stuff/")
+from paths import out_path_unmod as out_path, meta_unmod
 
 
 def c11(X, s):
@@ -28,12 +28,13 @@ def hatf_H(cfg, t, a, omega):
     return V + np.sqrt(2*np.pi*a) * T / 4 / np.pi 
 
 
-omega = 0.5
-Delta = 1
-beta = 10 
-n_tau = 40
+omega = meta_unmod["omega"]
+Delta = meta_unmod["Delta"]
+beta = meta_unmod["beta"]
+n_tau = meta_unmod["n_tau"]
+n_markov = meta_unmod["n_markov"]
+
 delta_t = beta/n_tau
-n_markov = 750000
 
 for i in range(100):
     data = load_from(out_path, str(i) + ".bindata", n_tau, n_markov)

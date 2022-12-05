@@ -5,10 +5,9 @@ import numpy as np
 from multiprocessing import cpu_count
 from threading import Thread
 
+from paths import out_path_mod as out_path, meta_mod
+
 bin_path = Path("../../MC/builddir/")
-out_path = Path("/glurch/scratch/knd35666/HO_configs_meta_mod/")
-n_tau = 40
-n_markov = 750000
 
 def produce_qho_data(omega: float, n_tau: int, beta: float, Delta: float, n_markov: int, tinsert: int, Eb: float, seed, fname):
     if(not isinstance(n_tau, int) or n_tau <= 0):
@@ -19,11 +18,13 @@ def produce_qho_data(omega: float, n_tau: int, beta: float, Delta: float, n_mark
     
     process = subprocess.run(cmd)
 
-omega = 0.5
-beta = 10
-Delta = 1
-tinsert = 0
-Eb = 3.4867
+n_tau = meta_mod["n_tau"]
+n_markov = meta_mod["n_markov"]
+omega = meta_mod["omega"]
+beta = meta_mod["beta"]
+Delta = meta_mod["Delta"]
+tinsert = meta_mod["tinsert"]
+Eb = meta_mod["Eb"]
 
 seed = lambda i: str(i*2)
 
@@ -33,8 +34,8 @@ def produce_data_or_not(i):
         print("computing for i =", i)
         produce_qho_data(omega, n_tau, beta, Delta, n_markov, tinsert, Eb, seed(i), out_path / (str(i) + ".bindata"))
         with open(out_path / "data.log", "a") as fout:
-            print(omega, n_tau, beta, Delta_from_ntau(n_tau), n_markov, tinsert, Eb, seed(i), out_path / (str(i) + ".bindata"), file=fout)
-            print(omega, n_tau, beta, Delta_from_ntau(n_tau), n_markov, tinsert, Eb, seed(i), out_path / (str(i) + ".bindata"))
+            print(omega, n_tau, beta, Delta, n_markov, tinsert, Eb, seed(i), out_path / (str(i) + ".bindata"), file=fout)
+            print(omega, n_tau, beta, Delta, n_markov, tinsert, Eb, seed(i), out_path / (str(i) + ".bindata"))
 
     else:
         print("skipping", out_path / (str(i) + ".bindata"))
