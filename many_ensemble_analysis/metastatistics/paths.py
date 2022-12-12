@@ -31,7 +31,7 @@ meta_unmod = dict(n_tau = 40
                 , Delta = 1
                 )
 
-# lower precision
+# higher precision
 out_path_mod = Path("/glurch/scratch/knd35666/HO_configs_meta_mod_hp_ses/")
 meta_mod = dict(n_tau = 40
                 , n_markov = 8_000_000
@@ -40,4 +40,15 @@ meta_mod = dict(n_tau = 40
                 , Delta = 1
                 , tinsert = 0
                 , Eb = 3.4867
+                )
+
+# higher precision
+out_path_mod_gs = Path("/glurch/scratch/knd35666/HO_configs_meta_mod_hp_sgs/")
+meta_mod_gs = dict(n_tau = 40
+                , n_markov = 8_000_000
+                , omega = 0.5
+                , beta = 10
+                , Delta = 1
+                , tinsert = 0
+                , Eb = 1.49269
                 )

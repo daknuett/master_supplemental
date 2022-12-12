@@ -5,7 +5,8 @@ import numpy as np
 from multiprocessing import cpu_count
 from threading import Thread
 
-from paths import out_path_mod as out_path, meta_mod
+#from paths import out_path_mod as out_path, meta_mod
+from paths import out_path_mod_gs as out_path, meta_mod_gs as meta_mod
 
 bin_path = Path("../../MC/builddir/")
 

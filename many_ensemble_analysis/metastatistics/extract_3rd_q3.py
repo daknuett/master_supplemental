@@ -11,7 +11,7 @@ sys.path.append("../../statistics")
 from statistic.statistic import make_bins, jackknife_std, tauint
 from statistic.fitting import fit
 
-from paths import out_path_unmod, out_path_mod, meta_mod
+from paths import out_path_unmod, out_path_mod_gs as out_path_mod, meta_mod_gs as meta_mod
 
 omega = meta_mod["omega"]
 Delta = meta_mod["Delta"]
@@ -69,7 +69,6 @@ def effective_mass_decay(C, eps, i):
 results_um = []
 results_hm = []
 results_fm = []
-
 for i in range(100):
     ensemble1 = load_from(out_path_unmod, str(i) + ".bindata", n_tau, n_markov)
     ensemble2 = load_from(out_path_mod, str(i) + ".bindata", n_tau, n_markov)
@@ -113,7 +112,7 @@ for i in range(100):
                                 #, fit_kwargs={"method": 2}
                                 , jk_use_central_result=False
                                 )
-    results_um.append([p[0], p_std[0]])
+    results_um.append([p[2], p_std[2]])
 
     cf_mod = correlation_f_mod1
     correlation_f_mod1 = correlation_f_mod1[:T.shape[0] // 2]
@@ -130,9 +129,11 @@ for i in range(100):
     me_means = me(corrf_consider, T_mod1[1] - T_mod1[0])
     me_stds = jackknife_std(correlation_f_mod1[1:], me, T_mod1[1] - T_mod1[0], data_axis=1)
 
+    nskipendplateau = 10
+
     y = lambda t, p: p[0] * np.ones_like(t)
-    p_m, p_std_m, f_std_m, return_data_m = fit(y, T_consider[:-1], me_means, me_stds, np.array([2])
-            , statistic=lambda means: me(means, T_mod1[1] - T_mod1[0])
+    p_m, p_std_m, f_std_m, return_data_m = fit(y, T_consider[:-1 - nskipendplateau], me_means[:-nskipendplateau], me_stds[:-nskipendplateau], np.array([2])
+            , statistic=lambda means: me(means, T_mod1[1] - T_mod1[0])[:-nskipendplateau]
             , data=correlation_f_mod1[1:])
 
     results_hm.append([p_m[0], p_std_m[0]])
@@ -153,7 +154,7 @@ for i in range(100):
     y = lambda t, p: np.ones_like(t) * p[0]
     p0 = np.array([2])
     n_skip = 0
-    n_take = 4
+    n_take = 11
 
     non_nan = np.where(~ np.isnan(deltaEs_std_m))
     is_nan = np.where(np.isnan(deltaEs_std_m))
@@ -172,7 +173,7 @@ results_fm = np.array(results_fm)
 results_um = np.array(results_um)
 results_hm = np.array(results_hm)
 
-with open("results_1st_extraction.csv", "w") as fout:
+with open("results_3st_extraction.csv", "w") as fout:
     print("um", results_um.shape[0], np.mean(results_um[:,0]), np.std(results_um[:,0]), np.mean(results_um[:,1]), np.std(results_um[:,1]), file=fout)
     print("hm", results_hm.shape[0], np.mean(results_hm[:,0]), np.std(results_hm[:,0]), np.mean(results_hm[:,1]), np.std(results_hm[:,1]), file=fout)
     print("fm", results_fm.shape[0], np.mean(results_fm[:,0]), np.std(results_fm[:,0]), np.mean(results_fm[:,1]), np.std(results_fm[:,1]), file=fout)
