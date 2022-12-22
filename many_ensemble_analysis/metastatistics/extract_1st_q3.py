@@ -105,13 +105,12 @@ for i in range(100):
     f = lambda t, p: p[0] + p[1]*np.exp(-t * (p[2] - p[0]))
     p0 = np.array([1, 2., 2.])
     nskip = 2
-    nskipend = 2 + 3
+    nskipend = 2 + 4
     p, p_std, f_std, return_data = fit(f, T_decaying[nskip:-3 - nskipend], deltaEs[nskip:-2 - nskipend], deltaEs_std[nskip:-2 - nskipend], p0
-                                , statistic=lambda means:np.array([deltaE_decay(means, beta/n_tau, i) for i in range(means.size - 1)])[nskip:-2 - nskipend]
-                                , data=decaying_regime
-                                #, p0_guesses=p0_guesses
-                                #, fit_kwargs={"method": 2}
-                                , jk_use_central_result=False
+                                        , statistic=lambda means:np.array([deltaE_decay(means, beta/n_tau, i) for i in range(means.size - 1)])[nskip:-2 - nskipend]
+                                        , data=decaying_regime
+                                        , fit_kwargs={"eps1": 1e-5, "eps2": 1e-5, "eps3": 1e-3, "eps4": 1e-3}
+                                        , jk_use_central_result=True
                                 )
     results_um.append([p[0], p_std[0]])
 
@@ -130,10 +129,14 @@ for i in range(100):
     me_means = me(corrf_consider, T_mod1[1] - T_mod1[0])
     me_stds = jackknife_std(correlation_f_mod1[1:], me, T_mod1[1] - T_mod1[0], data_axis=1)
 
+    
+    nskipendplateau = 6
+
     y = lambda t, p: p[0] * np.ones_like(t)
-    p_m, p_std_m, f_std_m, return_data_m = fit(y, T_consider[:-1], me_means, me_stds, np.array([2])
-            , statistic=lambda means: me(means, T_mod1[1] - T_mod1[0])
-            , data=correlation_f_mod1[1:])
+    p_m, p_std_m, f_std_m, return_data_m = fit(y, T_consider[:-1 - nskipendplateau], me_means[:-nskipendplateau], me_stds[:-nskipendplateau], np.array([2])
+                                                , statistic=lambda means: me(means, T_mod1[1] - T_mod1[0])[:-nskipendplateau]
+                                                , fit_kwargs={"eps1": 1e-5, "eps2": 1e-5, "eps3": 1e-3, "eps4": 1e-3}
+                                                , data=correlation_f_mod1[1:])
 
     results_hm.append([p_m[0], p_std_m[0]])
 
@@ -153,7 +156,7 @@ for i in range(100):
     y = lambda t, p: np.ones_like(t) * p[0]
     p0 = np.array([2])
     n_skip = 0
-    n_take = 4
+    n_take = 12
 
     non_nan = np.where(~ np.isnan(deltaEs_std_m))
     is_nan = np.where(np.isnan(deltaEs_std_m))
@@ -163,6 +166,7 @@ for i in range(100):
                                            , deltaEs_std_m[non_nan][n_skip:n_take]
                                            , p0
                                            , statistic=lambda means: dEdec(means)[non_nan][n_skip:n_take]
+                                           , fit_kwargs={"eps1": 1e-5, "eps2": 1e-5, "eps3": 1e-3, "eps4": 1e-3}
                                            , data=considered_corrf)
     results_fm.append([p_fm[0], p_std_fm[0]])
 
@@ -177,3 +181,6 @@ with open("results_1st_extraction.csv", "w") as fout:
     print("hm", results_hm.shape[0], np.mean(results_hm[:,0]), np.std(results_hm[:,0]), np.mean(results_hm[:,1]), np.std(results_hm[:,1]), file=fout)
     print("fm", results_fm.shape[0], np.mean(results_fm[:,0]), np.std(results_fm[:,0]), np.mean(results_fm[:,1]), np.std(results_fm[:,1]), file=fout)
 
+
+results = np.array([results_um, results_hm, results_fm])
+np.save("results_1st_extraction.npy", results)

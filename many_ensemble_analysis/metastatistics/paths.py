@@ -2,7 +2,7 @@ from pathlib import Path
 #
 ## lower precision
 ## Use this for autocorrelation measurement
-#out_path_unmod = Path("/glurch/scratch/knd35666/HO_configs_autocorrelation_stuff/")
+#out_path_unmod = Path("XXXXX/HO_configs_autocorrelation_stuff/")
 #meta_unmod = dict(n_tau = 40
 #                , n_markov = 750000
 #                , omega = 0.5
@@ -11,7 +11,7 @@ from pathlib import Path
 #                )
 #
 ## lower precision
-#out_path_mod = Path("/glurch/scratch/knd35666/HO_configs_meta_mod/")
+#out_path_mod = Path("XXXXX/HO_configs_meta_mod/")
 #meta_mod = dict(n_tau = 40
 #                , n_markov = 750000
 #                , omega = 0.5
@@ -23,7 +23,8 @@ from pathlib import Path
 #
 
 # higher precision.
-out_path_unmod = Path("/glurch/scratch/knd35666/HO_configs_meta_unmod_hp/")
+#out_path_unmod = Path("XXXXX/HO_configs_meta_unmod_hp/")
+out_path_unmod = Path("XXXXX/HO_configs_meta_unmod_hp/")
 meta_unmod = dict(n_tau = 40
                 , n_markov = 8_000_000
                 , omega = 0.5
@@ -32,7 +33,7 @@ meta_unmod = dict(n_tau = 40
                 )
 
 # higher precision
-out_path_mod = Path("/glurch/scratch/knd35666/HO_configs_meta_mod_hp_ses/")
+out_path_mod = Path("XXXXX/HO_configs_meta_mod_hp_ses/")
 meta_mod = dict(n_tau = 40
                 , n_markov = 8_000_000
                 , omega = 0.5
@@ -43,7 +44,8 @@ meta_mod = dict(n_tau = 40
                 )
 
 # higher precision
-out_path_mod_gs = Path("/glurch/scratch/knd35666/HO_configs_meta_mod_hp_sgs/")
+#out_path_mod_gs = Path("XXXXX/HO_configs_meta_mod_hp_sgs/")
+out_path_mod_gs = Path("XXXXX/HO_configs_meta_mod_hp_sgs/")
 meta_mod_gs = dict(n_tau = 40
                 , n_markov = 8_000_000
                 , omega = 0.5

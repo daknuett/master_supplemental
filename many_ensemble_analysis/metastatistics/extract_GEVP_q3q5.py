@@ -142,3 +142,6 @@ results_es = np.array(results_es)
 with open("results_GEVP_q3q5.csv", "w") as fout:
     print("gs", results_gs.shape[0], np.mean(results_gs[:,0]), np.std(results_gs[:,0]), np.mean(results_gs[:,1]), np.std(results_gs[:,1]), file=fout)
     print("es", results_es.shape[0], np.mean(results_es[:,0]), np.std(results_es[:,0]), np.mean(results_es[:,1]), np.std(results_es[:,1]), file=fout)
+
+results = np.array([results_gs, results_es])
+np.save("results_GEVP_q3q5.npy", results)
